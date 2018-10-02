@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <title>validate-check</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- <meta name="theme-color" content="#B71C1C">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#B71C1C">
+  <meta name="msapplication-navbutton-color" content="#B71C1C"> -->
+
+</head>
+
+<body>
+  <div id="app"></div>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDsywyTBX3Bgq_qbQDhs7csMKnX4qAnFNU",
+      authDomain: "validadecheck.firebaseapp.com",
+      databaseURL: "https://validadecheck.firebaseio.com",
+      projectId: "validadecheck",
+      storageBucket: "validadecheck.appspot.com",
+      messagingSenderId: "974994892187"
+    };
+    firebase.initializeApp(config);
+
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/dist/build.js"></script>
+</body>
+
+</html>
