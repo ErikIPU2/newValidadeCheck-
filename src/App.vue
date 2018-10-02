@@ -1,10 +1,11 @@
 <template>
 	<div id="app">
 		<div v-if="loaded">
-			<loader></loader>
+			<loader>Carregando...</loader>
 		</div>
 		<div v-else>
 			<div v-if="!isLoged">
+				<meta name="theme-color" content="#ffffff">
 				<div class="container">
 					<div class="row">
 						<div class="card col s12 offset-l2 l8 z-depth-5" style="margin-top: 5%">
@@ -44,6 +45,7 @@
 			</div>
 	
 			<div v-else>
+				<meta name="theme-color" content="#B71C1C">
 				<tela v-bind:user="user"></tela>
 			</div>
 		</div>
@@ -52,8 +54,8 @@
 </template>
 
 <script>
-	import tela from "./components/Tela.vue"
-	import loader from "./components/Loader.vue"
+	import tela from "./components/Tela.vue";
+	import loader from "./components/Loader.vue";
 	
 	export default {
 		name: "app",
@@ -73,7 +75,7 @@
 					this.isLoged = false;
 				}
 	
-				this.loaded = false
+				this.loaded = false;
 			});
 		},
 	
@@ -96,23 +98,32 @@
 			//faz login com o google
 			googleLogin() {
 				var provider = new firebase.auth.GoogleAuthProvider();
-				firebase.auth().signInWithRedirect(provider).catch(e => {
-					alert(e.code);
-				});
+				firebase
+					.auth()
+					.signInWithRedirect(provider)
+					.catch(e => {
+						alert(e.code);
+					});
 			},
 	
 			//deslogar
 			logOut() {
-				firebase.auth().signOut().catch(error => {
-					console.log("saiu");
-				});
+				firebase
+					.auth()
+					.signOut()
+					.catch(error => {
+						console.log("saiu");
+					});
 			},
 	
 			//cadastrar
 			signUp() {
-				firebase.auth().createUserWithEmailAndPassword(this.login_email, this.login_password).catch((e) => {
-					this.errorThrow(e.code)
-				})
+				firebase
+					.auth()
+					.createUserWithEmailAndPassword(this.login_email, this.login_password)
+					.catch(e => {
+						this.errorThrow(e.code);
+					});
 			},
 	
 			//logar
@@ -120,23 +131,23 @@
 				if (!this.login_email || !this.login_password) {
 					return this.errorThrow("no-camp-complete");
 				}
-				firebase.auth().signInWithEmailAndPassword(this.login_email, this.login_password).catch((e) => {
-					this.errorThrow(e.code)
-				})
+				firebase
+					.auth()
+					.signInWithEmailAndPassword(this.login_email, this.login_password)
+					.catch(e => {
+						this.errorThrow(e.code);
+					});
 			},
-	
 	
 			//Tradução dos erros
 			errorThrow(errorCode) {
-	
-				var toast = (message) => {
+				var toast = message => {
 					iziToast.error({
 						title: message,
 						position: "center",
-						closeOnClick: true,
-	
-					})
-				}
+						closeOnClick: true
+					});
+				};
 	
 				//banco de erros
 				switch (errorCode) {
@@ -173,14 +184,11 @@
 							title: "Erro desconhecido",
 							message: errorCode,
 							closeOnClick: true,
-							position: "center",
-						})
+							position: "center"
+						});
 						break;
 				}
-	
 			}
-	
-	
 		}
 	};
 </script>

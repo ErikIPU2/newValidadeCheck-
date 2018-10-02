@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
+import vueFire from "vuefire"
 
-M.AutoInit()
+Vue.use(vueFire);
 
 new Vue({
   el: '#app',

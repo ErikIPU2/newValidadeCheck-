@@ -54,7 +54,9 @@
             </div>
         </div>
     
-        <h3 class="center-align">Carregando...</h3>
+        <h3 class="center-align">
+            <slot></slot>
+        </h3>
     </div>
 </template>
 
