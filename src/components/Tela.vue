@@ -27,7 +27,8 @@
     
     
                     <ul class="right hide-on-med-and-down">
-                        <li><a><i class="material-icons left">add</i> Adicionar Produtos</a></li>
+    
+                        <li><a data-target="addModal" class="modal-trigger"><i class="material-icons left">add</i> Adicionar Produtos</a></li>
                         <li><a><i class="material-icons left">sync_problem</i> Listar produtos vencidos</a></li>
                         <li><a><i class="material-icons left">view_module</i> Listar todos</a></li>
                         <li><a><i class="material-icons left">search</i> Pesquisar</a></li>
@@ -58,7 +59,7 @@
                 </a>
                 <ul>
                     <!-- Se precisar do tooltipe adicionar a classe "tooltipped" -->
-                    <li><a @click="addProd()" class="btn-floating" data-position="top" data-tooltip="Adicionar Produtos"><i class="material-icons">add</i>Adicionar</a></li>
+                    <li><a data-target="addModal" class="btn-floating modal-trigger" data-position="top" data-tooltip="Adicionar Produtos"><i class="material-icons">add</i>Adicionar</a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Listar produtos vencidos"><i class="material-icons">sync_problem</i></a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Listar todos"><i class="material-icons">view_module</i></a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Pesquisar"><i class="material-icons">search</i></a></li>
@@ -67,14 +68,19 @@
         </header>
     
         <main>
-        
+    
             <div class="container">
-                <blockquote v-if="DBItens.length === 0"><h1>Nenhum item cadastrado</h1></blockquote>
+                <blockquote v-if="DBItens.length === 0">
+                    <h1>Nenhum item cadastrado</h1>
+                </blockquote>
                 <tabela v-else v-bind:titulos="['Nome', 'Codigo de barras', 'Preço', 'Data de validade']" highlight="true" striped="true">
-                    <telem v-for="(itens, i) in DBItens" :key="i" v-bind:contents="[itens.name, itens.barcode, itens.price, itens.valid]"></telem>                    
+    
+                    <telem v-for="(itens, i) in DBItens" :key="i" v-bind:contents="[itens.name, itens.barcode, itens.price, itens.valid]">
+                    </telem>
+    
                 </tabela>
             </div>
-
+    
     
         </main>
     
@@ -87,13 +93,62 @@
                 </div>
             </div>
         </footer>
+    
+        <!-- Modais -->
+        <div id="addModal" class="modal">
+            <div class="modal-content">
+                <h4>Cadastrar Produto</h4>
+                <form>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <i class="material-icons prefix">description</i>
+                            <input type="text" id="add_name" class="validate" v-model="i_name">
+                            <label for="add_name">Nome do produto</label>
+                        </div>
+    
+                        <div class="input-field col s6">
+                            <i class="material-icons prefix">calendar_view_day</i>
+                            <input type="text" id="add_barcode" class="validate" v-model="i_barcode">
+                            <label for="add_barcode">Codigo de Barras</label>
+                        </div>
+    
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">attach_money</i>
+                                <input type="number" id="add_price" class="validate" step="0.25" v-model="i_price">
+                                <label for="add_price">Preço</label>
+                            </div>
+    
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">event</i>
+                                <input type="text" id="add_valid" class="validate" v-model="i_valid">
+                                <label for="add_valid">Data de validade</label>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <br><br>
+    
+                    <div class="center-align">
+                        <a @click="addProd()" class="waves-effect waves-red btn red darken-4">Cadastrar Produto</a>
+                    </div>
+    
+                    <div class="modal-footer">
+    
+                    </div>
+    
+                </form>
+            </div>
+    
+        </div>
+    
     </div>
 </template>
 
 <script>
     import tabela from "./Tabela.vue";
     import telem from "./ElementoTabela.vue";
-        
+    
     export default {
     
         name: "Tela",
@@ -102,36 +157,42 @@
             telem
         },
         props: ["user", "uid"],
-
-        data () {
+    
+        data() {
             return {
                 DBItens: [],
-
+    
                 i_name: "",
                 i_price: "",
                 i_valid: "",
                 i_barcode: ""
-
+    
             }
         },
 
+        filters: {
+            moneySimbol(val) {
+                return `${val} R$`
+            }
+        },
+    
         firebase: {
             DBContent: firebase.database().ref("data")
         },
-        
+    
         created() {
-
+    
             this.$bindAsArray('DBItens', firebase.database().ref("data").child(this.uid))
-
+    
             iziToast.success({
                 title: `Bem vindo ${this.user.displayName || this.user.email}`,
                 iconUrl: this.user.photoURL ||
                     "https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_account_circle_48px-512.png",
                 closeOnClick: true
             });
-            
-
-
+    
+    
+    
         },
     
     
@@ -142,37 +203,41 @@
                 this.$parent.logOut();
                 this.$destroy();
             },
-
+    
             addProd() {
                 if (!this.i_name || !this.i_price || !this.i_valid || !this.i_barcode) {
-                    return this.$parent.errorThrow("no-camp-complete") ;
+                    return this.$parent.errorThrow("no-camp-complete");
                 }
-
+    
                 var prop = {
                     name: this.i_name,
                     price: this.i_price,
                     valid: this.i_valid,
                     barcode: this.i_barcode
                 }
-
+    
                 this.$firebaseRefs.DBContent.child(this.uid).push(prop);
-                
             },
     
         },
     
-        mounted() {            
+        mounted() {
+    
             if (!this.user) {
                 this.logout();
+                this.$destroy();
                 this.$parent.$data.isLoged = false;
             }
     
             $(".fixed-action-btn").floatingActionButton({
                 toolbarEnabled: true
             });
-            
+    
             $(".tooltipped").tooltip();
             $('.sidenav').sidenav();
+            $('.modal').modal();
+            $('.datepicker').datepicker();
+    
     
         }
     };
