@@ -6,5 +6,10 @@ Vue.use(vueFire);
 
 new Vue({
   el: '#app',
+  firebase: function () {
+    return {
+      anArray: firebase.database().ref()
+    }
+  },
   render: h => h(App)
 })

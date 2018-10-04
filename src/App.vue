@@ -1,12 +1,21 @@
 <template>
 	<div id="app">
+		<detect-network v-on:detected-condition="offDet"></detect-network>
+	
+	
 		<div v-if="loaded">
 			<loader>Carregando...</loader>
 		</div>
+	
 		<div v-else>
 			<div v-if="!isLoged">
 				<meta name="theme-color" content="#ffffff">
-				<div class="container">
+	
+				<div v-if="!online">
+					<loader>Conectando...</loader>
+				</div>
+	
+				<div v-else class="container">
 					<div class="row">
 						<div class="card col s12 offset-l2 l8 z-depth-5" style="margin-top: 5%">
 							<div class="card-image waves-effect waves-block waves-light">
@@ -46,7 +55,7 @@
 	
 			<div v-else>
 				<meta name="theme-color" content="#B71C1C">
-				<tela v-bind:user="user"></tela>
+				<tela v-bind:user="user" v-bind:uid="user.uid"></tela>
 			</div>
 		</div>
 	
@@ -56,13 +65,15 @@
 <script>
 	import tela from "./components/Tela.vue";
 	import loader from "./components/Loader.vue";
+	import detectNetwork from "v-offline";
 	
 	export default {
 		name: "app",
 	
 		components: {
 			tela,
-			loader
+			loader,
+			detectNetwork
 		},
 	
 		created() {
@@ -83,6 +94,7 @@
 			return {
 				isLoged: false,
 				loaded: true,
+				online: "",
 	
 				login_email: "",
 				login_password: "",
@@ -111,9 +123,6 @@
 				firebase
 					.auth()
 					.signOut()
-					.catch(error => {
-						console.log("saiu");
-					});
 			},
 	
 			//cadastrar
@@ -138,6 +147,13 @@
 						this.errorThrow(e.code);
 					});
 			},
+
+
+			//detecta condição da internet
+			offDet(e) {	
+				this.online = e;
+			},
+	
 	
 			//Tradução dos erros
 			errorThrow(errorCode) {
