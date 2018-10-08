@@ -59,7 +59,7 @@
                 </a>
                 <ul>
                     <!-- Se precisar do tooltipe adicionar a classe "tooltipped" -->
-                    <li><a data-target="addModal" class="btn-floating modal-trigger" data-position="top" data-tooltip="Adicionar Produtos"><i class="material-icons">add</i>Adicionar</a></li>
+                    <li><a data-target="addModal" class="btn-floating modal-trigger" data-position="top" data-tooltip="Adicionar Produtos"><i class="material-icons">add</i></a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Listar produtos vencidos"><i class="material-icons">sync_problem</i></a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Listar todos"><i class="material-icons">view_module</i></a></li>
                     <li><a class="btn-floating" data-position="top" data-tooltip="Pesquisar"><i class="material-icons">search</i></a></li>
@@ -108,7 +108,7 @@
     
                         <div class="input-field col s6">
                             <i class="material-icons prefix">calendar_view_day</i>
-                            <input type="text" id="add_barcode" class="validate" v-model="i_barcode">
+                            <input type="number" id="add_barcode" class="validate" v-model="i_barcode">
                             <label for="add_barcode">Codigo de Barras</label>
                         </div>
     
@@ -169,12 +169,6 @@
     
             }
         },
-
-        filters: {
-            moneySimbol(val) {
-                return `${val} R$`
-            }
-        },
     
         firebase: {
             DBContent: firebase.database().ref("data")
@@ -217,7 +211,30 @@
                 }
     
                 this.$firebaseRefs.DBContent.child(this.uid).push(prop);
+    
+                this.i_name = "";
+                this.i_price = "",
+                    this.i_valid = "",
+                    this.i_barcode = ""
+    
+                $(".modal").modal("close")
             },
+    
+            getDay() {
+                var date = new Date();
+                var day = "" + date.getDate();
+                var mounth = "" + (date.getMonth() + 1);
+                var year = "" + date.getFullYear();
+    
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                if (mounth.length == 1) {
+                    mounth = "0" + mounth;
+                }
+                
+                return `${day}/${mounth}/${year}`;
+            }
     
         },
     
